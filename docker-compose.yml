@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  # Serviço da API Node.js
+  api:
+    build: .
+    container_name: tech_challenge_api
+    ports:
+      - "3000:3000"
+    environment:
+      # Configuração da URL de conexão utilizando o nome do serviço 'db' como host
+      - DATABASE_URL=postgresql://admin:postgresadmin@db:5432/blog_db
+    depends_on:
+      - db
+
+  # Serviço do Banco de Dados PostgreSQL
+  db:
+    image: postgres:15-alpine
+    container_name: tech_challenge_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: postgresadmin
+      POSTGRES_DB: blog_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
